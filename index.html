@@ -1,0 +1,897 @@
+<!doctype html>
+<html lang="bn" class="antialiased">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>মনবন্ধু | MonBondhu — আপনার মানসিক স্বাস্থ্যের বন্ধু</title>
+
+  <!-- Tailwind CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- Fonts: Inter (English), Noto Sans Bengali (Bangla) -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&family=Noto+Sans+Bengali:wght@300;400;700&display=swap" rel="stylesheet">
+
+  <style>
+    :root{
+      --accent: #0f5132; /* deep green */
+      --accent-2: #ef4444; /* red */
+      --muted: #6b7280;
+    }
+
+    html.light { color-scheme: light; }
+    html.dark  { color-scheme: dark; }
+
+    /* Font modes */
+    html.font-en { font-family: "Inter", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial; }
+    html.font-bn { font-family: "Noto Sans Bengali", "Inter", system-ui, sans-serif; }
+
+    /* Cute default focus */
+    .focus-ring:focus { outline: none; box-shadow: 0 0 0 4px rgba(15,81,50,0.12); border-radius: .5rem; }
+
+    /* simple avatar pulse */
+    .pulse {
+      animation: pulse 2.2s infinite;
+    }
+    @keyframes pulse {
+      0% { transform: scale(1); opacity: 1; }
+      50% { transform: scale(1.02); opacity: 0.85; }
+      100% { transform: scale(1); opacity: 1; }
+    }
+
+    /* small accessible transition */
+    .soft-trans { transition: all .28s ease; }
+  </style>
+</head>
+<body class="bg-gradient-to-b from-green-50 via-white to-white dark:from-slate-900 dark:via-slate-900 dark:to-slate-800 text-slate-900 dark:text-slate-100">
+
+  <!-- Topbar -->
+  <header class="sticky top-0 z-40 backdrop-blur-sm bg-white/60 dark:bg-slate-900/60 border-b border-slate-200 dark:border-slate-700">
+    <div class="max-w-6xl mx-auto flex items-center justify-between gap-4 p-3 md:p-4">
+      <div class="flex items-center gap-3">
+        <!-- Heroicons Heart / Circle Stack -->
+        <div class="w-10 h-10 rounded-full bg-gradient-to-tr from-green-600 to-emerald-400 flex items-center justify-center shadow-md pulse">
+          <!-- heroicon: heart -->
+          <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 text-white" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+            <path d="M3.172 5.172a4 4 0 015.656 0L10 6.343l1.172-1.171a4 4 0 115.656 5.656L10 18.657 3.172 10.828a4 4 0 010-5.656z"/>
+          </svg>
+        </div>
+
+        <div>
+          <h1 id="brand" class="text-lg md:text-xl font-extrabold" lang="bn">মনবন্ধু</h1>
+          <p class="text-xs text-slate-600 dark:text-slate-300 -mt-1" id="tagline">আপনার মানসিক স্বাস্থ্যের বন্ধু</p>
+        </div>
+      </div>
+
+      <div class="flex items-center gap-3">
+        <!-- Language toggle -->
+        <button id="langToggle" aria-label="Toggle language" class="focus-ring bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 px-3 py-2 rounded-lg soft-trans flex items-center gap-2">
+          <!-- globe icon (heroicons) -->
+          <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-emerald-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.6" d="M12 2a10 10 0 100 20 10 10 0 000-20zM2 12h20M12 2v20" />
+          </svg>
+          <span id="langLabel" class="text-sm">বাংলা</span>
+        </button>
+
+        <!-- Font toggle (en/bn fonts) -->
+        <button id="fontToggle" aria-label="Toggle font" class="focus-ring bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 px-3 py-2 rounded-lg soft-trans hidden md:flex items-center gap-2">
+          <!-- text-size icon -->
+          <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-emerald-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M3 6h18M6 6v12M18 6v12" />
+          </svg>
+          <span id="fontLabel" class="text-sm">ফন্ট: বাংলা</span>
+        </button>
+
+        <!-- Dark / Light toggle -->
+        <button id="themeToggle" aria-label="Toggle dark mode" class="focus-ring bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 px-3 py-2 rounded-lg soft-trans flex items-center gap-2">
+          <!-- Sun / Moon heroicons (we switch SVGs programmatically) -->
+          <svg id="iconSun" xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-amber-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <circle cx="12" cy="12" r="4"></circle><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/>
+          </svg>
+
+          <svg id="iconMoon" xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-slate-300 hidden" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/>
+          </svg>
+
+          <span id="themeLabel" class="text-sm">ডার্ক</span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- HERO -->
+  <main class="max-w-6xl mx-auto px-4 md:px-6">
+    <section class="mt-6 md:mt-8 grid grid-cols-1 md:grid-cols-3 gap-6 items-center">
+      <div class="md:col-span-2 bg-white dark:bg-slate-900/40 border border-slate-100 dark:border-slate-700 rounded-2xl p-6 shadow-sm">
+        <div class="flex items-start gap-4">
+          <div class="w-20 h-20 rounded-xl bg-emerald-50 dark:bg-slate-800 flex items-center justify-center shadow-inner">
+            <!-- heroicons user group / health -->
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-11 h-11 text-emerald-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M17 21v-2a4 4 0 00-4-4H7a4 4 0 00-4 4v2"/>
+              <circle cx="9" cy="7" r="4"/>
+              <path d="M23 21v-2a4 4 0 00-3-3.87"/>
+              <path d="M16 3.13a4 4 0 010 7.75"/>
+            </svg>
+          </div>
+
+          <div class="flex-1">
+            <h2 id="heroTitle" class="text-2xl md:text-3xl font-extrabold">আপনার সুস্থতার ছোট্ট বন্ধু</h2>
+            <p id="heroSub" class="mt-2 text-sm text-slate-600 dark:text-slate-300">দৈনন্দিন মানসিক চেক-ইন, স্থানীয় স্বাস্থ্যকর্মী খোঁজ, গোপন সহায়তা অনুরোধ এবং ভয়েস-সহায়ক — সবই গতানুগতিক ইন্টারনেটের বাইরে কাজ করবে।</p>
+            <div class="flex flex-wrap gap-3 mt-4">
+              <button id="startCheckin" class="bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2 rounded-full font-semibold shadow soft-trans focus-ring">আজকের চেক-ইন</button>
+              <button id="openVoice" class="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 px-4 py-2 rounded-full soft-trans focus-ring flex items-center gap-2">
+                <!-- mic icon -->
+                <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-emerald-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M12 1v11"/>
+                  <path d="M19 11a7 7 0 01-14 0"/>
+                  <path d="M12 23v-4"/>
+                </svg>
+                <span id="voiceBtnLabel">ভয়েস অ্যাসিস্ট্যান্ট</span>
+              </button>
+
+              <button id="openMap" class="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 px-4 py-2 rounded-full soft-trans focus-ring flex items-center gap-2">
+                <!-- map icon -->
+                <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-emerald-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6">
+                  <path d="M20.5 3.5l-5 2-5-2-6 2.5v12l6-2.5 5 2 5-2 6 2.5v-12z"/>
+                </svg>
+                <span>কমিউনিটি মানচিত্র</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Quick stats / export -->
+      <aside class="bg-white dark:bg-slate-900/40 border border-slate-100 dark:border-slate-700 rounded-2xl p-4 shadow-sm">
+        <div class="flex items-center justify-between">
+          <div>
+            <p class="text-xs text-slate-500 dark:text-slate-300">সাপ্তাহিক চেক-ইন</p>
+            <h3 id="weekCheckins" class="text-2xl font-bold mt-1">0</h3>
+          </div>
+          <div class="text-right">
+            <button id="exportBtn" class="bg-emerald-50 dark:bg-slate-800 text-emerald-700 dark:text-emerald-400 px-3 py-2 rounded-lg flex items-center gap-2 focus-ring soft-trans">
+              <!-- download icon -->
+              <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6">
+                <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/>
+                <path d="M7 10l5 5 5-5"/>
+                <path d="M12 15V3"/>
+              </svg>
+              এক্সপোর্ট
+            </button>
+            <p class="text-xs text-slate-400 dark:text-slate-400 mt-2">গোপনীয়তার প্রতি শ্রদ্ধা রেখে সংক্ষিপ্ত সারাংশ</p>
+          </div>
+        </div>
+      </aside>
+    </section>
+
+    <!-- FEATURES GRID -->
+    <section id="features" class="mt-8 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      <!-- Feature Card Example: Check-in -->
+      <article class="bg-white dark:bg-slate-800/40 border border-slate-100 dark:border-slate-700 rounded-2xl p-5 shadow hover:shadow-lg soft-trans">
+        <div class="flex items-start gap-3">
+          <div class="p-3 rounded-xl bg-emerald-50 dark:bg-emerald-900/30">
+            <!-- heroicons: sparkles -->
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-7 h-7 text-emerald-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6">
+              <path d="M9 3v3M9 3l1.5 1.5M9 6l1.5-1.5M12 7l3 3M12 7l3-3M21 12l-3 1.5M21 12l-3-1.5"/>
+            </svg>
+          </div>
+          <div class="flex-1">
+            <h4 class="font-bold text-lg">মানসিক স্বাস্থ্য চেক-ইন</h4>
+            <p class="text-sm text-slate-600 dark:text-slate-300 mt-2">একটি সহজ বাংলা স্কেল — অনুভূতি লঘুচিত্র, দ্রুত নোট এবং লোকাল গ্রাফ দেখুন।</p>
+            <div class="mt-3 flex gap-2">
+              <button class="start-checkin-btn bg-emerald-600 hover:bg-emerald-700 text-white px-3 py-1 rounded-full text-sm focus-ring">শুরু করুন</button>
+              <button class="view-history-btn bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 px-3 py-1 rounded-full text-sm focus-ring">ইতিহাস</button>
+            </div>
+          </div>
+        </div>
+      </article>
+
+      <!-- Community Map -->
+      <article class="bg-white dark:bg-slate-800/40 border border-slate-100 dark:border-slate-700 rounded-2xl p-5 shadow soft-trans">
+        <div class="flex items-start gap-3">
+          <div class="p-3 rounded-xl bg-emerald-50 dark:bg-emerald-900/30">
+            <!-- map pin icon -->
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-7 h-7 text-emerald-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6">
+              <path d="M12 21s8-4.5 8-11a8 8 0 10-16 0c0 6.5 8 11 8 11z"/>
+              <circle cx="12" cy="10" r="2.5"/>
+            </svg>
+          </div>
+          <div class="flex-1">
+            <h4 class="font-bold text-lg">কমিউনিটি হেলথ ম্যাপ</h4>
+            <p class="text-sm text-slate-600 dark:text-slate-300 mt-2">মানচিত্রে না বুঝলে, ল্যান্ডমার্ক ভিত্তিক তালিকা দেখুন — "বড় আম গাছের পাশে" টাইপ ফরম্যাটে।</p>
+            <div class="mt-3 flex gap-2">
+              <button id="mapOpenBtn" class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 px-3 py-1 rounded-full text-sm focus-ring">মানচিত্র খুলুন</button>
+              <button id="mapFallbackBtn" class="bg-emerald-50 dark:bg-emerald-900/20 px-3 py-1 rounded-full text-sm focus-ring">ল্যান্ডমার্ক তালিকা</button>
+            </div>
+          </div>
+        </div>
+      </article>
+
+      <!-- Anonymous Request -->
+      <article class="bg-white dark:bg-slate-800/40 border border-slate-100 dark:border-slate-700 rounded-2xl p-5 shadow soft-trans">
+        <div class="flex items-start gap-3">
+          <div class="p-3 rounded-xl bg-emerald-50 dark:bg-emerald-900/30">
+            <!-- shield check -->
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-7 h-7 text-emerald-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6">
+              <path d="M12 2l7 4v5c0 5-3.1 9.7-7 11-3.9-1.3-7-6-7-11V6l7-4z"/>
+              <path d="M9.5 12.5l1.75 1.75L15 11.5"/>
+            </svg>
+          </div>
+          <div class="flex-1">
+            <h4 class="font-bold text-lg">গোপন সহায়তা অনুরোধ</h4>
+            <p class="text-sm text-slate-600 dark:text-slate-300 mt-2">নাম ছাড়া অনুরোধ করুন — অনুরোধটি আপনার ফোনেই সংরক্ষিত থাকবে এবং অনলাইন হলে জমা হবে।</p>
+            <div class="mt-3 flex gap-2">
+              <button id="anonRequestBtn" class="bg-emerald-600 hover:bg-emerald-700 text-white px-3 py-1 rounded-full text-sm focus-ring">অনুরোধ পাঠান</button>
+              <button id="anonQueueBtn" class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 px-3 py-1 rounded-full text-sm focus-ring">কিউ দেখা</button>
+            </div>
+          </div>
+        </div>
+      </article>
+
+      <!-- Maternal tracker -->
+      <article class="bg-white dark:bg-slate-800/40 border border-slate-100 dark:border-slate-700 rounded-2xl p-5 shadow soft-trans">
+        <div class="flex items-start gap-3">
+          <div class="p-3 rounded-xl bg-emerald-50 dark:bg-emerald-900/30">
+            <!-- baby icon -->
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-7 h-7 text-emerald-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6">
+              <path d="M12 2a5 5 0 015 5v3H7V7a5 5 0 015-5z"/>
+              <path d="M7 14s-1 3 5 3 5-3 5-3"/>
+            </svg>
+          </div>
+          <div class="flex-1">
+            <h4 class="font-bold text-lg">গর্ভবতী ও টিকা ট্র্যাকার</h4>
+            <p class="text-sm text-slate-600 dark:text-slate-300 mt-2">প্রেগন্যান্সি তারিখ দিন বা শিশুর জন্ম তারিখ দিন — আপকামিং ভিজিট ও টিকা দেখুন।</p>
+            <div class="mt-3 flex gap-2">
+              <button id="openMaternal" class="bg-emerald-600 hover:bg-emerald-700 text-white px-3 py-1 rounded-full text-sm focus-ring">ট্র্যাক শুরু</button>
+            </div>
+          </div>
+        </div>
+      </article>
+
+      <!-- Seasonal tips -->
+      <article class="bg-white dark:bg-slate-800/40 border border-slate-100 dark:border-slate-700 rounded-2xl p-5 shadow soft-trans">
+        <div class="flex items-start gap-3">
+          <div class="p-3 rounded-xl bg-emerald-50 dark:bg-emerald-900/30">
+            <!-- sun & cloud -->
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-7 h-7 text-emerald-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6">
+              <path d="M20 17.58A5 5 0 0018 7H6a4 4 0 000 8h14z"/>
+              <path d="M12 2v2M12 20v2M4 12H2M22 12h-2"/>
+            </svg>
+          </div>
+          <div class="flex-1">
+            <h4 class="font-bold text-lg">মৌসুমি প্রতিরোধ টিপস</h4>
+            <p class="text-sm text-slate-600 dark:text-slate-300 mt-2">বর্ষা/ডেঙ্গু, গ্রীষ্ম/জলজনিত সতর্কতা, শীত/শ্বাসকষ্ট নীতিমালা — সহজ, ব্যবহারিক নির্দেশিকা।</p>
+            <div class="mt-3 flex gap-2">
+              <button id="seasonTipsBtn" class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 px-3 py-1 rounded-full text-sm focus-ring">টিপস দেখুন</button>
+            </div>
+          </div>
+        </div>
+      </article>
+
+      <!-- Voice-first assistant card -->
+      <article class="col-span-1 lg:col-span-2 bg-white dark:bg-slate-900/40 border border-slate-100 dark:border-slate-700 rounded-2xl p-5 shadow soft-trans">
+        <div class="flex items-start gap-4">
+          <div class="p-3 rounded-xl bg-emerald-50 dark:bg-emerald-900/30">
+            <!-- mic -->
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-7 h-7 text-emerald-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6">
+              <path d="M12 1v11"/>
+              <path d="M19 11a7 7 0 01-14 0"/>
+              <path d="M12 23v-4"/>
+            </svg>
+          </div>
+          <div class="flex-1">
+            <h4 class="font-bold text-lg">ভয়েস-ফার্স্ট হেলথ অ্যাসিস্ট্যান্ট</h4>
+            <p class="text-sm text-slate-600 dark:text-slate-300 mt-2">ট্যাপ করে বলুন: "আজ আমার মন কেমন?" — অ্যাপ শুনবে এবং বাংলা ভাষায় নির্দেশ/টিপস বলবে। (ব্রাউজারের Web Speech API ব্যবহার করে)</p>
+            <div class="mt-3 flex gap-2 items-center">
+              <button id="voiceStart" class="bg-emerald-600 hover:bg-emerald-700 text-white px-3 py-1 rounded-full text-sm focus-ring flex items-center gap-2">
+                <!-- mic -->
+                <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6">
+                  <path d="M12 1v11"/>
+                  <path d="M19 11a7 7 0 01-14 0"/>
+                </svg>
+                শোনো
+              </button>
+              <div id="voiceStatus" class="text-sm text-slate-500 dark:text-slate-300">পড়ুন বা বলুন — ব্রাউজার সমর্থিত হলে কাজ করবে।</div>
+            </div>
+
+            <div id="voiceTranscript" class="mt-3 text-sm text-slate-700 dark:text-slate-200 bg-slate-50 dark:bg-slate-800/40 p-3 rounded-lg hidden"></div>
+          </div>
+        </div>
+      </article>
+    </section>
+
+    <!-- Footer / Contact -->
+    <section class="mt-10 mb-20 grid grid-cols-1 md:grid-cols-3 gap-6">
+      <div class="md:col-span-2 bg-white dark:bg-slate-900/40 border border-slate-100 dark:border-slate-700 rounded-2xl p-6">
+        <h3 class="font-extrabold text-lg">কীভাবে সাহায্য করতে পারি?</h3>
+        <p class="text-sm text-slate-600 dark:text-slate-300 mt-2">আপনি ডিজাইনার, ডেভ, কিংবা স্থানীয় স্বেচ্ছাসেবক—মনবন্ধু গ্রামীণ জীবনে পৌঁছাতে সাহায্য করছে। সহযোগিতা বা প্রশিক্ষণের জন্য ইমেইল করুন: <a href="mailto:computerclub@baiust.ac.bd" class="text-emerald-600 dark:text-emerald-300 underline">computerclub@baiust.ac.bd</a></p>
+      </div>
+
+      <div class="bg-white dark:bg-slate-900/40 border border-slate-100 dark:border-slate-700 rounded-2xl p-6">
+        <h4 class="font-bold">সংরক্ষণ/প্রাইভেসি</h4>
+        <p class="text-sm text-slate-600 dark:text-slate-300 mt-2">ব্যবহারকারীর ব্যক্তিগত ডেটা ডিভাইসে সঞ্চিত থাকে। রপ্তানি করা তথ্য সম্পূর্ণ সংক্ষিপ্তকৃত ও অজ্ঞাতনামা।</p>
+      </div>
+    </section>
+  </main>
+
+  <!-- Modals + Templates (hidden by default) -->
+  <div id="modals" aria-hidden="true">
+    <!-- Checkin modal -->
+    <div id="checkinModal" class="fixed inset-0 z-50 hidden items-center justify-center p-4">
+      <div class="absolute inset-0 bg-black/40 backdrop-blur-sm" data-close-modal></div>
+      <div class="relative bg-white dark:bg-slate-800 rounded-2xl p-6 w-full max-w-xl shadow-lg">
+        <div class="flex justify-between items-start">
+          <h4 class="text-lg font-bold">আজকের চেক-ইন</h4>
+          <button data-close-modal class="text-slate-500 hover:text-slate-700 dark:hover:text-slate-200">&times;</button>
+        </div>
+
+        <form id="checkinForm" class="mt-4 space-y-4">
+          <div>
+            <label class="block text-sm font-medium text-slate-700 dark:text-slate-200 mb-2">আপনার মন কেমন?</label>
+            <div class="flex gap-2">
+              <!-- scale 1-5 quick buttons -->
+              <template id="scaleBtnTpl">
+                <button type="button" class="scale-btn px-3 py-2 rounded-lg border border-slate-200 dark:border-slate-700 focus-ring text-sm"></button>
+              </template>
+            </div>
+          </div>
+
+          <div>
+            <label class="block text-sm font-medium text-slate-700 dark:text-slate-200 mb-2">ছোট্ট নোট (ঐচ্ছিক)</label>
+            <textarea id="checkinNote" rows="3" class="w-full rounded-lg border border-slate-200 dark:border-slate-700 p-2 bg-slate-50 dark:bg-slate-900/40 text-sm"></textarea>
+          </div>
+
+          <div class="flex justify-end gap-3">
+            <button type="button" data-close-modal class="px-4 py-2 rounded-lg border border-slate-200 dark:border-slate-700">বাতিল</button>
+            <button type="submit" class="px-4 py-2 rounded-lg bg-emerald-600 text-white">সংরক্ষণ করুন</button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- Anonymous request modal -->
+    <div id="anonModal" class="fixed inset-0 z-50 hidden items-center justify-center p-4">
+      <div class="absolute inset-0 bg-black/40 backdrop-blur-sm" data-close-modal></div>
+      <div class="relative bg-white dark:bg-slate-800 rounded-2xl p-6 w-full max-w-md shadow-lg">
+        <div class="flex justify-between items-start">
+          <h4 class="text-lg font-bold">গোপন সহায়তা অনুরোধ</h4>
+          <button data-close-modal class="text-slate-500 hover:text-slate-700 dark:hover:text-slate-200">&times;</button>
+        </div>
+
+        <form id="anonForm" class="mt-4 space-y-4">
+          <div>
+            <label class="block text-sm font-medium text-slate-700 dark:text-slate-200 mb-2">আপনি কি জানতে চান / কীভাবে সাহায্য চাইবেন?</label>
+            <textarea id="anonMessage" rows="4" class="w-full rounded-lg border border-slate-200 dark:border-slate-700 p-2 bg-slate-50 dark:bg-slate-900/40 text-sm" placeholder="উদাহরণ: রাতে ঘুম আসে না; কাউকে কথা বলতে চাই।"></textarea>
+          </div>
+
+          <div>
+            <label class="flex items-center gap-2 text-sm text-slate-600">
+              <input type="checkbox" id="anonConsent" class="focus-ring" /> আমি বুঝতে পেরেছি: আমার নাম শেয়ার করা হবে না।
+            </label>
+          </div>
+
+          <div class="flex justify-end gap-3">
+            <button type="button" data-close-modal class="px-4 py-2 rounded-lg border border-slate-200 dark:border-slate-700">বাতিল</button>
+            <button type="submit" class="px-4 py-2 rounded-lg bg-emerald-600 text-white">অনুরোধ পাঠান</button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- Map modal (demo) -->
+    <div id="mapModal" class="fixed inset-0 z-40 hidden items-center justify-center p-4">
+      <div class="absolute inset-0 bg-black/30" data-close-modal></div>
+      <div class="relative bg-white dark:bg-slate-800 rounded-2xl p-4 w-full max-w-4xl shadow-lg">
+        <div class="flex justify-between items-center">
+          <h4 class="font-bold">কমিউনিটি হেলথ ম্যাপ</h4>
+          <div class="flex items-center gap-2">
+            <button id="detectLocation" class="px-3 py-1 rounded-lg bg-emerald-600 text-white text-sm">লবি খুঁজুন</button>
+            <button data-close-modal class="px-3 py-1 rounded-lg border border-slate-200 dark:border-slate-700">বন্ধ করুন</button>
+          </div>
+        </div>
+
+        <div class="mt-4 grid grid-cols-1 md:grid-cols-2 gap-4">
+          <!-- left: actual map placeholder (since offline) -->
+          <div class="h-64 rounded-lg bg-slate-50 dark:bg-slate-900/40 flex items-center justify-center border border-slate-100 dark:border-slate-700">
+            <div class="text-slate-500 dark:text-slate-300 text-center">
+              <p class="font-medium">মানচিত্র (প্রোটোটাইপ)</p>
+              <p class="text-xs mt-2">অফলাইন/কম ডেটার জন্য এটি একটি স্থানধারক। বাস্তবে আপনি Leaflet/Mapbox/OSM ব্যবহার করবেন।</p>
+            </div>
+          </div>
+
+          <!-- right: list & landmark fallback -->
+          <div>
+            <h5 class="font-semibold">কাছের স্বাস্থ্যকেন্দ্র (ল্যান্ডমার্ক দ্বারা)</h5>
+            <ul id="facilityList" class="mt-2 space-y-2 text-sm">
+              <!-- filled by JS -->
+            </ul>
+
+            <div class="mt-4">
+              <label class="text-sm font-medium">আপনি কোন ল্যান্ডমার্ক জানেন?</label>
+              <div class="mt-2 flex gap-2">
+                <input id="landmarkInput" class="flex-1 rounded-lg border border-slate-200 dark:border-slate-700 p-2 bg-white dark:bg-slate-900/40 text-sm" placeholder="উদাহরণ: বড় আম গাছ" />
+                <button id="searchByLandmark" class="px-3 py-2 rounded-lg bg-emerald-600 text-white">অনুসন্ধান</button>
+              </div>
+              <p class="text-xs text-slate-500 dark:text-slate-300 mt-2">ল্যান্ডমার্কভিত্তিক সার্চ গ্রামীণ ব্যবহারকারীর জন্য সহজ।</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Scripts -->
+  <script>
+    /*************************************************************************
+     * Utilities & Initialization
+     *************************************************************************/
+    const htmlEl = document.documentElement;
+
+    // Preference keys
+    const PREF_THEME = 'mb_pref_theme'; // 'dark' | 'light'
+    const PREF_LANG  = 'mb_pref_lang';  // 'bn' | 'en'
+    const PREF_FONT  = 'mb_pref_font';  // 'bn' | 'en'
+
+    function savePref(key, value){ localStorage.setItem(key, value); }
+    function getPref(key, fallback){ return localStorage.getItem(key) || fallback; }
+
+    // Initialize theme, lang, font
+    (function initPreferences(){
+      const savedTheme = getPref(PREF_THEME, window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+      applyTheme(savedTheme);
+
+      const savedLang = getPref(PREF_LANG, 'bn');
+      applyLang(savedLang);
+
+      const savedFont = getPref(PREF_FONT, 'bn');
+      applyFont(savedFont);
+    })();
+
+    // Theme apply
+    function applyTheme(mode){
+      if(mode === 'dark'){
+        htmlEl.classList.remove('light');
+        htmlEl.classList.add('dark');
+        document.getElementById('themeLabel').textContent = 'ডার্ক';
+        document.getElementById('iconSun').classList.add('hidden');
+        document.getElementById('iconMoon').classList.remove('hidden');
+        savePref(PREF_THEME, 'dark');
+      } else {
+        htmlEl.classList.remove('dark');
+        htmlEl.classList.add('light');
+        document.getElementById('themeLabel').textContent = 'লাইট';
+        document.getElementById('iconSun').classList.remove('hidden');
+        document.getElementById('iconMoon').classList.add('hidden');
+        savePref(PREF_THEME, 'light');
+      }
+    }
+    document.getElementById('themeToggle').addEventListener('click', () => {
+      const isDark = htmlEl.classList.contains('dark');
+      applyTheme(isDark ? 'light' : 'dark');
+    });
+
+    // Language apply (controls text content samples; in production you would load translations)
+    function applyLang(lang){
+      const isBn = (lang === 'bn');
+      document.getElementById('langLabel').textContent = isBn ? 'বাংলা' : 'English';
+      // quick text changes (for demo)
+      document.getElementById('heroTitle').textContent = isBn ? 'আপনার সুস্থতার ছোট্ট বন্ধু' : 'Your small health companion';
+      document.getElementById('heroSub').textContent = isBn ? 'দৈনন্দিন মানসিক চেক-ইন, স্থানীয় স্বাস্থ্যকর্মী খোঁজ...' : 'Daily mood check-ins, local health worker finder...';
+      document.getElementById('voiceBtnLabel').textContent = isBn ? 'ভয়েস অ্যাসিস্ট্যান্ট' : 'Voice assistant';
+      document.getElementById('langToggle').setAttribute('title', isBn ? 'Switch to English' : 'বাংলায় দেখুন');
+      savePref(PREF_LANG, lang);
+    }
+    document.getElementById('langToggle').addEventListener('click', () => {
+      const cur = getPref(PREF_LANG, 'bn');
+      const next = cur === 'bn' ? 'en' : 'bn';
+      applyLang(next);
+    });
+
+    // Font apply
+    function applyFont(font) {
+      if(font === 'en'){
+        htmlEl.classList.add('font-en');
+        htmlEl.classList.remove('font-bn');
+        document.getElementById('fontLabel').textContent = 'Font: English';
+      } else {
+        htmlEl.classList.add('font-bn');
+        htmlEl.classList.remove('font-en');
+        document.getElementById('fontLabel').textContent = 'ফন্ট: বাংলা';
+      }
+      savePref(PREF_FONT, font);
+    }
+    document.getElementById('fontToggle').addEventListener('click', () => {
+      const cur = getPref(PREF_FONT, 'bn');
+      applyFont(cur === 'bn' ? 'en' : 'bn');
+    });
+
+    /*************************************************************************
+     * Modal helpers
+     *************************************************************************/
+    function openModal(id){
+      const m = document.getElementById(id);
+      m.classList.remove('hidden');
+      m.style.display = 'flex';
+      m.setAttribute('aria-hidden', 'false');
+    }
+    function closeModal(el) {
+      if(!el) return;
+      el.classList.add('hidden');
+      el.style.display = 'none';
+      el.setAttribute('aria-hidden', 'true');
+    }
+    // attach close handlers
+    document.querySelectorAll('[data-close-modal]').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        // close nearest modal container
+        const modal = btn.closest('[id$="Modal"], #mapModal');
+        if(modal) closeModal(modal);
+      });
+    });
+
+    /*************************************************************************
+     * Check-in (localStorage-backed)
+     *************************************************************************/
+    const CHECKIN_KEY = 'mb_checkins_v1';
+    function getCheckins(){ try { return JSON.parse(localStorage.getItem(CHECKIN_KEY) || '[]'); } catch(e){ return []; } }
+    function saveCheckins(arr){ localStorage.setItem(CHECKIN_KEY, JSON.stringify(arr)); }
+
+    // Build scale buttons
+    (function buildScaleBtns(){
+      const tpl = document.getElementById('scaleBtnTpl');
+      const container = document.querySelector('#checkinModal .flex.gap-2') || document.querySelector('#checkinModal form div');
+      // Actually select the proper div
+      const scaleContainer = document.querySelector('#checkinModal form div:first-of-type .flex') || document.querySelector('#checkinModal form div');
+      const scaleDiv = document.querySelector('#checkinModal form div:first-of-type .flex');
+      if(!scaleDiv) return;
+      [1,2,3,4,5].forEach(n => {
+        const btn = document.createElement('button');
+        btn.type = 'button';
+        btn.className = 'scale-btn px-3 py-2 rounded-lg border border-slate-200 dark:border-slate-700 focus-ring text-sm';
+        btn.textContent = (n === 1) ? 'খারাপ' : (n === 5) ? 'খুব ভালো' : ${n};
+        btn.dataset.value = n;
+        btn.addEventListener('click', () => {
+          scaleDiv.querySelectorAll('.scale-btn').forEach(b => b.classList.remove('bg-emerald-50','dark:bg-emerald-700/30','border-emerald-600'));
+          btn.classList.add('bg-emerald-50','dark:bg-emerald-700/30','border-emerald-600');
+          btn.dataset.selected = '1';
+          scaleDiv.dataset.selected = n;
+        });
+        scaleDiv.appendChild(btn);
+      });
+    })();
+
+    // Open checkin
+    document.querySelectorAll('.start-checkin-btn, #startCheckin').forEach(btn => {
+      btn.addEventListener('click', () => openModal('checkinModal'));
+    });
+
+    // Submit checkin
+    document.getElementById('checkinForm').addEventListener('submit', (e) => {
+      e.preventDefault();
+      const scaleDiv = document.querySelector('#checkinModal form div:first-of-type .flex');
+      const selected = parseInt(scaleDiv.dataset.selected || '0', 10);
+      const note = document.getElementById('checkinNote').value || '';
+      if(!selected){
+        alert('অনুগ্রহ করে একটি বিকল্প নির্বাচন করুন।');
+        return;
+      }
+      const items = getCheckins();
+      items.push({ ts: Date.now(), value: selected, note });
+      saveCheckins(items);
+      closeModal(document.getElementById('checkinModal'));
+      updateWeekCounts();
+    });
+
+    function updateWeekCounts(){
+      const items = getCheckins();
+      const weekAgo = Date.now() - (7*24*3600*1000);
+      const count = items.filter(i => i.ts > weekAgo).length;
+      document.getElementById('weekCheckins').textContent = String(count);
+    }
+    updateWeekCounts();
+
+    // View history (simple)
+    document.querySelectorAll('.view-history-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const items = getCheckins();
+        const history = items.slice().reverse().slice(0, 12).map(i => {
+          const d = new Date(i.ts);
+          return ${d.toLocaleString()} — ${i.value} — ${i.note || '-'};
+        }).join('\n');
+        alert(history || 'কোন রেকর্ড নেই।');
+      });
+    });
+
+    /*************************************************************************
+     * Anonymous requests (offline queue)
+     *************************************************************************/
+    const ANON_KEY = 'mb_anon_queue_v1';
+    function getAnonQueue(){ try { return JSON.parse(localStorage.getItem(ANON_KEY) || '[]'); } catch(e){ return []; } }
+    function saveAnonQueue(q){ localStorage.setItem(ANON_KEY, JSON.stringify(q)); }
+
+    document.getElementById('anonRequestBtn').addEventListener('click', () => openModal('anonModal'));
+    document.getElementById('anonQueueBtn').addEventListener('click', () => {
+      const q = getAnonQueue();
+      if(q.length === 0) { alert('কোন অনুরোধ কিউতে নেই।'); return; }
+      const summary = q.map((it, idx) => ${idx+1}. [${new Date(it.ts).toLocaleString()}] ${it.message.substring(0,80)}...).join('\n\n');
+      alert(summary);
+    });
+
+    document.getElementById('anonForm').addEventListener('submit', (e) => {
+      e.preventDefault();
+      if(!document.getElementById('anonConsent').checked){
+        alert('অনুগ্রহ করে সম্মত হোন।'); return;
+      }
+      const message = document.getElementById('anonMessage').value.trim();
+      if(!message){
+        alert('কিছু লিখুন।'); return;
+      }
+      const q = getAnonQueue();
+      q.push({ ts: Date.now(), message, sent: false });
+      saveAnonQueue(q);
+      closeModal(document.getElementById('anonModal'));
+      alert('আপনার অনুরোধ কিউতে যোগ হয়েছে এবং অনলাইন হলে পাঠানো হবে।');
+      // Try to send now if online (demo: simulated)
+      trySendQueue();
+    });
+
+    // Simulate send: In real app you'd POST to a server endpoint with encryption and no user info
+    function trySendQueue(){
+      const q = getAnonQueue();
+      if(navigator.onLine){
+        // Attempt to "send" and mark sent (simulation)
+        const unsent = q.filter(x => !x.sent);
+        if(unsent.length === 0) return;
+        // Simulate server accept:
+        const remaining = q.map(x => ({...x, sent: true}));
+        saveAnonQueue(remaining);
+        // Show confirmation
+        setTimeout(() => {
+          alert(আপনার ${unsent.length}টি গোপন অনুরোধ সফলভাবে গ্রহণ করা হয়েছে। স্থানীয় সংস্থাগুলো ৪৮ ঘণ্টার মধ্যে যোগাযোগ করবে (সিমুলেটেড)।);
+        }, 600);
+      } else {
+        // offline: leave in queue
+        console.log('Offline — leaving anon requests in queue');
+      }
+    }
+
+    // Global: listen for online to try send
+    window.addEventListener('online', trySendQueue);
+
+    // For demo: manual function to simulate sending queued requests to server (call from console)
+    function simulateSendQueuedRequests(){
+      // This would normally send to your real endpoint with proper consent + anonymity
+      trySendQueue();
+    }
+
+    /*************************************************************************
+     * Map & Landmark fallback (demo)
+     *************************************************************************/
+    const demoFacilities = [
+      { name: 'Union Health Center — বড় আম গাছের পাশে', distance: '1.2 km', note: 'টিউশন কেন্দ্রের পিছনে' },
+      { name: 'Community Clinic — মসজিদের কাছে', distance: '2.8 km', note: 'সকাল ৮-১১ খোলা' },
+      { name: 'NGO Counselling Point — পাকা রাস্তার মোড়', distance: '4.5 km', note: 'মেন্টাল হেলথ ট্রেনড ভলান্টিয়ার' }
+    ];
+
+    document.getElementById('mapOpenBtn').addEventListener('click', () => {
+      openModal('mapModal');
+      renderFacilityList(demoFacilities);
+    });
+    document.getElementById('mapFallbackBtn').addEventListener('click', () => {
+      openModal('mapModal');
+      renderFacilityList(demoFacilities);
+    });
+
+    function renderFacilityList(list){
+      const ul = document.getElementById('facilityList');
+      ul.innerHTML = '';
+      list.forEach(f => {
+        const li = document.createElement('li');
+        li.className = 'p-2 rounded-lg border border-slate-100 dark:border-slate-700';
+        li.innerHTML = <div class="flex justify-between items-start"><div><div class="font-semibold">${f.name}</div><div class="text-xs text-slate-500 dark:text-slate-300">${f.note}</div></div><div class="text-xs text-slate-400">${f.distance}</div></div>;
+        ul.appendChild(li);
+      });
+    }
+
+    document.getElementById('searchByLandmark').addEventListener('click', () => {
+      const q = document.getElementById('landmarkInput').value.trim();
+      if(!q) { alert('কোন ল্যান্ডমার্ক লিখুন'); return; }
+      // Demo: filter facilities whose name or note contains q (very basic)
+      const filtered = demoFacilities.filter(f => (f.name + ' ' + f.note).toLowerCase().includes(q.toLowerCase()));
+      renderFacilityList(filtered.length ? filtered : demoFacilities);
+    });
+
+    // detectLocation (demo)
+    document.getElementById('detectLocation').addEventListener('click', () => {
+      if(!navigator.geolocation) { alert('ব্রাউজার জিওলোকেশন সমর্থন করে না।'); return; }
+      navigator.geolocation.getCurrentPosition(pos => {
+        alert(আপনার অবস্থান: ${pos.coords.latitude.toFixed(4)}, ${pos.coords.longitude.toFixed(4)} (ডেমো));
+        // In a real app: query facility list by distance & accessibility (bus roads)
+      }, err => {
+        alert('অবস্থান নির্ণয় করা যাচ্ছে না: ' + (err.message || 'Error'));
+      }, { timeout: 8000 });
+    });
+
+    /*************************************************************************
+     * Maternal tracker (simple local)
+     *************************************************************************/
+    const MAT_KEY = 'mb_maternal_v1';
+    function getMaternal(){ try { return JSON.parse(localStorage.getItem(MAT_KEY) || '[]'); } catch(e){ return []; } }
+    function saveMaternal(arr){ localStorage.setItem(MAT_KEY, JSON.stringify(arr)); }
+
+    document.getElementById('openMaternal').addEventListener('click', () => {
+      // simple prompt-based demo: add pregnancy or child
+      const type = prompt('নতুন: (1) গর্ভাবস্থা (2) শিশুর জন্ম ট্র্যাক (১/২)') || '';
+      if(type !== '1' && type !== '2') return;
+      if(type === '1'){
+        const ed = prompt('অনুগ্রহ করে আনুমানিক ডেলিভারি তারিখ দিন (YYYY-MM-DD):');
+        if(!ed) return;
+        const arr = getMaternal();
+        arr.push({ kind: 'pregnancy', ed, created: Date.now() });
+        saveMaternal(arr);
+        alert('সংরক্ষণ করা হয়েছে। প্রয়োজন হলে রিমাইন্ডার দেওয়া হবে।');
+      } else {
+        const bd = prompt('শিশুর জন্ম তারিখ দিন (YYYY-MM-DD):');
+        if(!bd) return;
+        const arr = getMaternal();
+        arr.push({ kind: 'child', bd, created: Date.now() });
+        saveMaternal(arr);
+        alert('শিশুর ডেটা সংরক্ষিত।');
+      }
+    });
+
+    /*************************************************************************
+     * Seasonal tips (small demo)
+     *************************************************************************/
+    const seasonalTips = {
+      monsoon: [
+        'ঘরে পানি জমে কিনা প্রতিদিন দেখুন — স্ট্যান্ডিং ওয়াটার ডেঙ্গু মশার বাসা।',
+        'জল জমে থাকা পাত্র ঢেকে রাখুন বা উল্টে দিন।'
+      ],
+      winter: [
+        'শীতকালে শিশুকে উষ্ণ রাখতে তাপমাত্রা পর্যবেক্ষণ করুন।',
+        'শ্বাসকষ্ট বাড়লে দ্রুত স্বাস্থ্যকেন্দ্র দেখান।'
+      ],
+      summer: [
+        'গরমে পর্যাপ্ত পানি পান করান — শিশুদের জন্য ORS প্রস্তুত রাখুন।',
+        'রোদে দীর্ঘ সময় থাকলে ছায়ায় নিয়ে আসে।'
+      ]
+    };
+
+    document.getElementById('seasonTipsBtn').addEventListener('click', () => {
+      const month = new Date().getMonth() + 1;
+      let season = 'monsoon';
+      if([12,1,2].includes(month)) season = 'winter';
+      else if([3,4,5].includes(month)) season = 'summer';
+      else if([6,7,8,9].includes(month)) season = 'monsoon';
+      const tips = seasonalTips[season];
+      alert(মৌসুম: ${season.toUpperCase()}\n\n- ${tips.join('\n- ')});
+    });
+
+    /*************************************************************************
+     * Export anonymized summary (simple demo CSV generator)
+     *************************************************************************/
+    document.getElementById('exportBtn').addEventListener('click', () => {
+      // Build aggregated stats
+      const checkins = getCheckins();
+      const anonQ = getAnonQueue();
+      const maternal = getMaternal();
+      const stats = {
+        total_checkins: checkins.length,
+        checkins_last_7d: checkins.filter(i => i.ts > Date.now() - 7*24*3600*1000).length,
+        anon_requests_in_queue: anonQ.filter(x => !x.sent).length,
+        maternal_records: maternal.length
+      };
+      // Simple CSV-like blob
+      const csvLines = [
+        ['metric','value'],
+        ['total_checkins', stats.total_checkins],
+        ['checkins_last_7d', stats.checkins_last_7d],
+        ['anon_requests_in_queue', stats.anon_requests_in_queue],
+        ['maternal_records', stats.maternal_records]
+      ].map(r => r.join(',')).join('\n');
+
+      const blob = new Blob([csvLines], { type: 'text/csv' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'monbondhu_summary.csv';
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      URL.revokeObjectURL(url);
+    });
+
+    /*************************************************************************
+     * Voice assistant (Web Speech API) — demo
+     *************************************************************************/
+    const voiceSupported = ('speechSynthesis' in window) && ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window);
+    const voiceStartBtn = document.getElementById('voiceStart');
+    const voiceStatus = document.getElementById('voiceStatus');
+    const voiceTranscript = document.getElementById('voiceTranscript');
+
+    if(!voiceSupported){
+      voiceStatus.textContent = 'আপনার ব্রাউজার ভয়েস ফিচার সমর্থন করে না (Chrome/Edge mobile works best).';
+      voiceStartBtn.disabled = true;
+      voiceStartBtn.classList.add('opacity-50', 'cursor-not-allowed');
+    } else {
+      let recognition;
+      const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+      recognition = new SpeechRecognition();
+      recognition.lang = 'bn-BD';
+      recognition.interimResults = false;
+      recognition.maxAlternatives = 1;
+
+      voiceStartBtn.addEventListener('click', () => {
+        try {
+          recognition.start();
+          voiceStatus.textContent = 'শোনার জন্য প্রস্তুত... বলুন।';
+        } catch(e){ console.warn(e); }
+      });
+
+      recognition.addEventListener('result', (ev) => {
+        const text = ev.results[0][0].transcript;
+        voiceTranscript.classList.remove('hidden');
+        voiceTranscript.textContent = আপনি বললেন: "${text}";
+        // Simple intent parsing (very basic)
+        if(/মন|কেমন/.test(text)){
+          speakText('আপনি কেমন বোধ করছেন আজ? আপনি ১ থেকে ৫ পরিমাপে বলতে পারেন অথবা একটি ছোট নোট যোগ করতে পারেন।');
+          openModal('checkinModal');
+        } else if(/হেল্প|সাহায্য|কাউকে/.test(text)){
+          speakText('আপনি গোপন অনুরোধ পাঠাতে চান? আমি একটি গোপন বার্তা নেয়ার জন্য প্রস্তুত।');
+          openModal('anonModal');
+        } else if(/হাসপাতাল|ক্লিনিক|জায়গা/.test(text)){
+          speakText('আপনার কাছাকাছি স্বাস্থ্যকেন্দ্র দেখানো হবে। আপনি একটি ল্যান্ডমার্ক বলে দিন যেমন "বড় আম গাছ"।');
+          openModal('mapModal');
+        } else {
+          speakText('আমি বুঝিনি। আপনি "আমার মন কেমন" বা "সাহায্য চাই" বলতে পারেন।');
+        }
+      });
+
+      recognition.addEventListener('end', () => {
+        voiceStatus.textContent = 'শোনার সেশন শেষ। পুনরায় শুরু করতে বোতাম চাপুন।';
+      });
+
+      recognition.addEventListener('error', (e) => {
+        voiceStatus.textContent = 'ভুল হয়েছে: ' + (e.error || 'unknown');
+      });
+
+      function speakText(text){
+        const ut = new SpeechSynthesisUtterance(text);
+        ut.lang = 'bn-BD';
+        window.speechSynthesis.cancel();
+        window.speechSynthesis.speak(ut);
+      }
+    }
+
+    // Also wire the small voice button on hero
+    document.getElementById('openVoice').addEventListener('click', () => {
+      document.getElementById('voiceStart').click();
+    });
+
+    /*************************************************************************
+     * Small accessibility & keyboard shortcuts
+     *************************************************************************/
+    // Open checkin with 'c', anonymous request with 'a', voice with 'v'
+    window.addEventListener('keydown', (e) => {
+      if(e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+      if(e.key === 'c') document.querySelectorAll('.start-checkin-btn')[0]?.click();
+      if(e.key === 'a') document.getElementById('anonRequestBtn').click();
+      if(e.key === 'v') document.getElementById('openVoice').click();
+    });
+
+    /*************************************************************************
+     * Finish setup: try sending queued anon requests on load if online
+     *************************************************************************/
+    trySendQueue();
+
+    /*************************************************************************
+     * Helpful console hints (for developer)
+     *************************************************************************/
+    console.log('MonBondhu demo loaded. Preferences:', {
+      theme: getPref(PREF_THEME), lang: getPref(PREF_LANG), font: getPref(PREF_FONT)
+    });
+    console.log('Call simulateSendQueuedRequests() in console to simulate server send for queued anon requests.');
+  </script>
+</body>
+</html>
